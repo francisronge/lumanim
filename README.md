@@ -66,13 +66,13 @@ An unverified or unavailable runtime never invalidates a lesson: the exact rende
 
 [Open the Ship of Theseus lesson](https://francisronge.github.io/lumanim/lessons/0001-ship-of-theseus.html)
 
-*(produced by GPT 5.6 Sol high)*
-
 [Open the Sorites lesson](https://francisronge.github.io/lumanim/lessons/0002-sorites.html)
 
 [Open the Liar lesson](https://francisronge.github.io/lumanim/lessons/0003-liar.html)
 
 Together, these form a three-lesson Paradoxes course with five real ManimGL visual bundles. [Browse the complete course source](examples/paradoxes), or run a live-capable visual locally with the trusted companion.
+
+*(produced by GPT 5.6 Sol high)*
 
 ## Development
 
