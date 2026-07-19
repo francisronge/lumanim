@@ -32,7 +32,7 @@ class VerifyLessonTests(unittest.TestCase):
         self.assertTrue(any("scene_sha256" in error for error in self.verify_without_ffprobe()))
 
     def test_reduced_motion_cannot_hide_fallback(self):
-        css = self.workspace / "assets" / "paradoxes.css"
+        css = self.workspace / "assets" / "paradoxes-dark.css"
         css.write_text(css.read_text(encoding="utf-8") + "\n@media (prefers-reduced-motion: reduce) { video { display: none; } }\n", encoding="utf-8")
         self.assertTrue(any("hides the fallback video" in error for error in self.verify_without_ffprobe()))
 
@@ -47,7 +47,7 @@ class VerifyLessonTests(unittest.TestCase):
 
     def test_local_query_string_fails(self):
         html = self.workspace / "lessons" / "0001-ship-of-theseus.html"
-        text = html.read_text(encoding="utf-8").replace("paradoxes.css", "paradoxes.css?v=1")
+        text = html.read_text(encoding="utf-8").replace("paradoxes-dark.css", "paradoxes-dark.css?v=1")
         html.write_text(text, encoding="utf-8")
         self.assertTrue(any("query strings" in error for error in self.verify_without_ffprobe()))
 
