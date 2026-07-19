@@ -61,9 +61,7 @@ An unverified or unavailable runtime never invalidates a lesson: the exact rende
 
 ## Example
 
-[`examples/ship-of-theseus`](examples/ship-of-theseus) is the first end-to-end proof. Open its lesson directly from disk for the rendered experience, or run the trusted companion to add live plank replacement.
-
-The example uses its own subject-specific stylesheet. It is not a Lumanim theme or template.
+[Open the Ship of Theseus lesson](https://francisronge.github.io/lumanim/lessons/0001-ship-of-theseus.html), the first end-to-end Lumanim example. It combines a rendered ManimGL explanation with retrieval and feedback. [Browse its source](examples/ship-of-theseus), or run it locally with the trusted companion to enable live plank replacement.
 
 ## Development
 
