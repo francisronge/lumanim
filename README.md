@@ -4,8 +4,6 @@ Lumanim is an Agent Skill that keeps Matt Pocock's complete `/teach` method and 
 
 The learner receives one HTML lesson. It opens with an authored ManimGL video or image, remains useful offline, and can optionally transition into a live exploration backed by the same real ManimGL scene.
 
-*(produced by GPT 5.6 Sol high)*
-
 ## What Lumanim preserves
 
 - `/teach` remains the teaching method: mission, trusted sources, proximal difficulty, retrieval, feedback, references, and learning records.
@@ -63,7 +61,11 @@ An unverified or unavailable runtime never invalidates a lesson: the exact rende
 
 ## Example
 
-[Open the Ship of Theseus lesson](https://francisronge.github.io/lumanim/lessons/0001-ship-of-theseus.html), the first end-to-end Lumanim example. It combines a rendered ManimGL explanation with retrieval and feedback. [Browse its source](examples/ship-of-theseus), or run it locally with the trusted companion to enable live plank replacement.
+[Open the Ship of Theseus lesson](https://francisronge.github.io/lumanim/lessons/0001-ship-of-theseus.html)
+
+*(produced by GPT 5.6 Sol high)*
+
+This first end-to-end Lumanim example combines a rendered ManimGL explanation with retrieval and feedback. [Browse its source](examples/ship-of-theseus), or run it locally with the trusted companion to enable live plank replacement.
 
 ## Development
 
