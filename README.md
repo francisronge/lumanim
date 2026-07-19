@@ -4,6 +4,8 @@ Lumanim is an Agent Skill that keeps Matt Pocock's complete `/teach` method and 
 
 The learner receives one HTML lesson. It opens with an authored ManimGL video or image, remains useful offline, and can optionally transition into a live exploration backed by the same real ManimGL scene.
 
+*(produced by GPT 5.6 Sol high)*
+
 ## What Lumanim preserves
 
 - `/teach` remains the teaching method: mission, trusted sources, proximal difficulty, retrieval, feedback, references, and learning records.
