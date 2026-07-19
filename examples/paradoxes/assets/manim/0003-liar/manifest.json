@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "lesson_id": "0003-liar",
+  "references": [
+    "reference/liar-structure.html"
+  ],
+  "manimgl": {
+    "repository": "https://github.com/3b1b/manim",
+    "commit": "6199a00d4c1b1127ebe45cb629c3f22538b10e13"
+  },
+  "visuals": [
+    {
+      "visual_id": "reference-loop",
+      "bundle": "visuals/reference-loop",
+      "scene_class": "ReferenceLoopLesson",
+      "render": {
+        "command": "manimgl scene.py ReferenceLoopLesson -w -r 1280x720 --fps 30 --video_dir . --file_name fallback",
+        "postprocess_command": "ffmpeg -i fallback.mp4 -map 0:v:0 -c copy -movflags +faststart fallback.faststart.mp4",
+        "resolution": [1280, 720],
+        "fps": 30,
+        "seed": 0,
+        "font": "Avenir Next",
+        "scene_sha256": "5e231ef4bc13e922466a9dc589500a9f34dcf65e85149ad9d9b6f346202c2b21",
+        "fallback_sha256": "9cd45688fa5fecbc6b15274b0784c1e2ea1f107a3e4adc2037e095791ce7b187",
+        "poster_sha256": "a4182482b22480fbf9cd21e038b18537b26961a5b680976c2c9c52c6d66a0f70"
+      },
+      "live": {
+        "enabled": false
+      },
+      "inspection": {
+        "frames": [
+          "inspection/frame-001.png",
+          "inspection/frame-002.png",
+          "inspection/frame-003.png",
+          "inspection/frame-004.png",
+          "inspection/contact-sheet.png"
+        ],
+        "reviewed": true,
+        "notes": "Reviewed the opening question, sentence construction, outgoing reference, returning reference, highlighted sentence boundary, and final explanatory caption. The loop remains legible without decorative motion or clipping."
+      }
+    },
+    {
+      "visual_id": "truth-loop",
+      "bundle": "visuals/truth-loop",
+      "scene_class": "TruthLoopLesson",
+      "live_scene_class": "TruthLoopLive",
+      "render": {
+        "command": "manimgl scene.py TruthLoopLesson -w -r 1280x720 --fps 30 --video_dir . --file_name fallback",
+        "postprocess_command": "ffmpeg -i fallback.mp4 -map 0:v:0 -c copy -movflags +faststart fallback.faststart.mp4",
+        "resolution": [1280, 720],
+        "fps": 30,
+        "seed": 0,
+        "font": "Avenir Next",
+        "scene_sha256": "23add0320a465bafbaf7084f5afeb8a39fc6888e421b4d0242dee23336a9cfd1",
+        "fallback_sha256": "54aa6dcbe53efc7527de5dbb08db0bab57019d42ed1784a7b888d764934bcd91",
+        "poster_sha256": "b0577ccbdd958c98a361c0bf8c6b3867f68e66ffc3f14ad4ddddd22aa8401e3a"
+      },
+      "live": {
+        "enabled": true,
+        "parameter": "assumption",
+        "range": [0, 1],
+        "resolution": [960, 540],
+        "fps": 30
+      },
+      "inspection": {
+        "frames": [
+          "inspection/frame-001.png",
+          "inspection/frame-002.png",
+          "inspection/frame-003.png",
+          "inspection/frame-004.png",
+          "inspection/contact-sheet.png",
+          "inspection/live-assume-false.jpg",
+          "inspection/live-assume-true.jpg"
+        ],
+        "reviewed": true,
+        "notes": "Reviewed the sentence card, TRUE-to-FALSE implication, FALSE-to-TRUE implication, repeated alternation, and no-stable-value endpoint. Both directions remain simultaneously visible so the final loop can be retrieved rather than merely watched. Exercised the resident real ManimGL live scene through the loopback frame API with both FALSE and TRUE assumptions; each state highlights the starting value, forced direction, and resulting opposite at 960x540."
+      }
+    }
+  ]
+}

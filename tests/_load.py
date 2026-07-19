@@ -8,7 +8,7 @@ sys.dont_write_bytecode = True
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "lumanim"
-EXAMPLE = ROOT / "examples" / "ship-of-theseus"
+EXAMPLE = ROOT / "examples" / "paradoxes"
 
 
 def load_script(name: str):

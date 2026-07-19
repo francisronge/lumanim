@@ -1,0 +1,18 @@
+directories:
+  base: "."
+  cache: ".cache/manim"
+  subdirs:
+    output: "."
+    raster_images: "."
+    vector_images: "."
+    three_d_models: "."
+    sounds: "."
+    data: "."
+    downloads: ".cache/downloads"
+    latex_cache: ".cache/latex"
+camera:
+  resolution: "(1280, 720)"
+  background_color: "#10151B"
+  fps: 30
+text:
+  font: "Avenir Next"

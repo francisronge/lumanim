@@ -62,19 +62,23 @@ Run a trusted live-capable lesson with:
 
 An unverified or unavailable runtime never invalidates a lesson: the exact rendered fallback remains the lesson's baseline.
 
-## Example
+## Examples
 
 [Open the Ship of Theseus lesson](https://francisronge.github.io/lumanim/lessons/0001-ship-of-theseus.html)
 
 *(produced by GPT 5.6 Sol high)*
 
-This first end-to-end Lumanim example combines a rendered ManimGL explanation with retrieval and feedback. [Browse its source](examples/ship-of-theseus), or run it locally with the trusted companion to enable live plank replacement.
+[Open the Sorites lesson](https://francisronge.github.io/lumanim/lessons/0002-sorites.html)
+
+[Open the Liar lesson](https://francisronge.github.io/lumanim/lessons/0003-liar.html)
+
+Together, these form a three-lesson Paradoxes course with five real ManimGL visual bundles. [Browse the complete course source](examples/paradoxes), or run a live-capable visual locally with the trusted companion.
 
 ## Development
 
 ```bash
 python -m unittest discover -s tests -v
-python skills/lumanim/scripts/verify_lesson.py examples/ship-of-theseus
+python skills/lumanim/scripts/verify_lesson.py examples/paradoxes
 node --check skills/lumanim/assets/lumanim-live.js
 node --check skills/lumanim/assets/teach-choice.js
 ```

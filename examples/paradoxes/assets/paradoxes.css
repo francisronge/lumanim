@@ -27,11 +27,16 @@ a { color: var(--accent); }
 .lumanim-actions .secondary { color: var(--ink); background: transparent; border: 1px solid var(--line); }
 .lumanim-actions button.is-invited { animation: invite 1.2s ease-in-out 2; }
 .control-card, .question { width: min(46rem, 100%); margin: 1rem 0; padding: 1.2rem 1.35rem; border: 1px solid var(--line); border-radius: .8rem; background: var(--card); }
+.choice-list { display: grid; gap: .65rem; width: fit-content; max-width: 100%; }
+.choice-list button { width: 100%; text-align: left; }
 input[type="range"] { width: 100%; accent-color: var(--accent); }
+.control-scale { display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); font-size: .85rem; }
 button { border: 0; border-radius: .55rem; padding: .7rem 1rem; color: #000; background: var(--ink); font: inherit; cursor: pointer; }
 button:disabled, input:disabled { cursor: not-allowed; opacity: .55; }
 button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid #e3a528; outline-offset: 3px; }
 .answer { margin-top: .8rem; padding-left: 1rem; border-left: 3px solid var(--accent); }
 .source { color: var(--muted); font-size: .92rem; }
+.lesson-nav { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+.visual-intro { margin-top: 2.5rem; }
 @media (prefers-reduced-motion: reduce) { .lumanim-actions button.is-invited { animation: none; } }
 @keyframes invite { 50% { transform: translateY(-2px); box-shadow: 0 .5rem 1.5rem rgb(184 61 46 / 25%); } }

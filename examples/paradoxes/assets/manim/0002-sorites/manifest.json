@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "lesson_id": "0002-sorites",
+  "references": [
+    "reference/sorites-structure.html"
+  ],
+  "manimgl": {
+    "repository": "https://github.com/3b1b/manim",
+    "commit": "6199a00d4c1b1127ebe45cb629c3f22538b10e13"
+  },
+  "visuals": [
+    {
+      "visual_id": "harmless-step",
+      "bundle": "visuals/harmless-step",
+      "scene_class": "HarmlessStepLesson",
+      "render": {
+        "command": "manimgl scene.py HarmlessStepLesson -w -r 1280x720 --fps 30 --video_dir . --file_name fallback",
+        "postprocess_command": "ffmpeg -i fallback.mp4 -map 0:v:0 -c copy -movflags +faststart fallback.faststart.mp4",
+        "resolution": [1280, 720],
+        "fps": 30,
+        "seed": 0,
+        "font": "Avenir Next",
+        "scene_sha256": "df8dbb525fea127093ea7be9619a151ec04d444de5e8e15a50426241e5bc600c",
+        "fallback_sha256": "c8e0ce20eccb922b71d2de2db64fd40fc11b3ec862f6a6487e208672c3d6b06d",
+        "poster_sha256": "a165b5e484adf99b8120b253e7988e730169b0a53eb1e85911f93c5368ef97f7"
+      },
+      "live": {
+        "enabled": false
+      },
+      "inspection": {
+        "frames": [
+          "inspection/frame-001.png",
+          "inspection/frame-002.png",
+          "inspection/frame-003.png",
+          "inspection/frame-004.png",
+          "inspection/contact-sheet.png"
+        ],
+        "reviewed": true,
+        "notes": "Reviewed the title, initial heap, one-grain comparison, and final tolerance rule. The removed grain is isolated in red, both heap verdicts remain legible, and no object is clipped or obscured."
+      }
+    },
+    {
+      "visual_id": "forced-march",
+      "bundle": "visuals/forced-march",
+      "scene_class": "ForcedMarchLesson",
+      "live_scene_class": "ForcedMarchLive",
+      "render": {
+        "command": "manimgl scene.py ForcedMarchLesson -w -r 1280x720 --fps 30 --video_dir . --file_name fallback",
+        "postprocess_command": "ffmpeg -i fallback.mp4 -map 0:v:0 -c copy -movflags +faststart fallback.faststart.mp4",
+        "resolution": [1280, 720],
+        "fps": 30,
+        "seed": 0,
+        "font": "Avenir Next",
+        "scene_sha256": "73d8eb83f12bd6afa45125e0574c8f585e868a02d686a94a3a1950fb36f54070",
+        "fallback_sha256": "506d1f752f8f6a99302e217332c103ca64cbf537d23e126ee20a55fa52288525",
+        "poster_sha256": "cfd25858dba3a0b4eab2923ce34875404003e606ecd469ff091b211e0ea632a1"
+      },
+      "live": {
+        "enabled": true,
+        "parameter": "march_fraction",
+        "range": [0, 1],
+        "resolution": [960, 540],
+        "fps": 30
+      },
+      "inspection": {
+        "frames": [
+          "inspection/frame-001.png",
+          "inspection/frame-002.png",
+          "inspection/frame-003.png",
+          "inspection/frame-004.png",
+          "inspection/contact-sheet.png",
+          "inspection/live-midpoint.jpg",
+          "inspection/live-endpoint.jpg"
+        ],
+        "reviewed": true,
+        "notes": "Reviewed the stated induction rule, opening heap, shrinking intermediate state, full implication track, and one-grain endpoint. The rapid count morph communicates repetition rather than a special cutoff; the final contradiction remains on screen long enough to read. Exercised the resident real ManimGL live scene at 50% and 100% through the loopback frame API; labels, grain visibility, implication track, and endpoint question remain legible at 960x540."
+      }
+    }
+  ]
+}

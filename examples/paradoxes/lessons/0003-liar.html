@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A Lumanim lesson making the self-reference and truth-value reversal of the Liar paradox visible.">
+  <title>A sentence turns on itself · Lumanim</title>
+  <link rel="stylesheet" href="../assets/paradoxes.css">
+</head>
+<body>
+  <main>
+    <article>
+      <p class="eyebrow">Lumanim · Paradox 0003</p>
+      <h1>A sentence<br>turns on itself.</h1>
+      <p class="lede">“This sentence is false” does not report a fact elsewhere. It reaches back, evaluates itself, and reverses every classical truth value you try to give it.</p>
+
+      <section class="question" data-teach-choice aria-labelledby="prediction-title">
+        <h2 id="prediction-title">Find the unusual ingredient</h2>
+        <p>What distinguishes the Liar from an ordinary sentence that happens to be false?</p>
+        <p class="choice-list">
+          <button type="button" aria-pressed="false" data-response="Exactly. Its subject is the very sentence doing the evaluating; the claim loops back onto its own truth status.">The sentence assigns itself falsehood.</button>
+          <button type="button" aria-pressed="false" data-response="An ordinary sentence can assign falsehood elsewhere without paradox. The special pressure begins when the target is the sentence itself.">The sentence assigns another falsehood.</button>
+        </p>
+        <p class="answer" data-teach-feedback hidden aria-live="polite"></p>
+      </section>
+    </article>
+
+    <section class="lumanim-stage" data-lumanim-stage data-live="false" aria-label="ManimGL explanation showing the Liar sentence referring back to itself">
+      <video controls playsinline preload="metadata" poster="../assets/manim/0003-liar/visuals/reference-loop/poster.png">
+        <source src="../assets/manim/0003-liar/visuals/reference-loop/fallback.mp4" type="video/mp4">
+        Your browser cannot play the first rendered ManimGL explanation.
+      </video>
+    </section>
+
+    <article>
+      <h2>Build the loop before evaluating it</h2>
+      <p><a href="https://plato.stanford.edu/entries/liar-paradox/">The Stanford Encyclopedia of Philosophy</a> writes the simple-falsity Liar as a sentence <em>L</em> which says of itself that <em>L</em> is false. The first visual exposes that reference: “this sentence” points to the complete sentence containing those words.</p>
+      <p>Self-reference alone is not enough. “This sentence has five words” also refers to itself and remains stable. The dangerous addition is a claim about its own falsehood.</p>
+
+      <h2 class="visual-intro">Now try to evaluate it</h2>
+      <p>Classical evaluation offers two starting points. Watch what the sentence does to each one.</p>
+    </article>
+
+    <section data-lumanim-experience="truth-loop">
+      <div class="lumanim-stage" data-lumanim-stage data-live="true" data-mode="rendered" aria-label="ManimGL explanation cycling the Liar sentence between true and false">
+        <video data-lumanim-fallback controls playsinline preload="metadata" poster="../assets/manim/0003-liar/visuals/truth-loop/poster.png">
+          <source src="../assets/manim/0003-liar/visuals/truth-loop/fallback.mp4" type="video/mp4">
+          Your browser cannot play the second rendered ManimGL explanation.
+        </video>
+        <canvas data-lumanim-live-frame hidden role="img" aria-label="A live ManimGL frame showing how either assumed truth value forces its opposite."></canvas>
+      </div>
+
+      <div class="lumanim-actions">
+        <button type="button" data-lumanim-explore>Test both assumptions yourself</button>
+        <button type="button" class="secondary" data-lumanim-replay hidden>Replay the explanation</button>
+      </div>
+
+      <article>
+        <div class="control-card" data-lumanim-controls hidden>
+          <label for="assumption"><strong>Choose a starting truth value</strong></label>
+          <input id="assumption" type="range" min="0" max="1" step="1" value="1" data-lumanim-control="assumption">
+          <div class="control-scale" aria-hidden="true"><span>FALSE</span><span>TRUE</span></div>
+          <button type="button" data-lumanim-reconnect hidden>Reconnect interaction</button>
+        </div>
+      </article>
+    </section>
+
+    <article>
+      <h2>Both doors return the opposite</h2>
+      <ol>
+        <li><strong>Assume true:</strong> what the sentence says must hold, so the sentence is false.</li>
+        <li><strong>Assume false:</strong> its claim that it is false is correct, so the sentence is true.</li>
+      </ol>
+      <p>The <a href="https://iep.utm.edu/liar-paradox/">Internet Encyclopedia of Philosophy</a> presents the same two-case derivation. Under ordinary truth principles and the demand that the sentence be either true or false, neither assignment remains stable.</p>
+
+      <section class="question" data-teach-choice aria-labelledby="retrieval-title">
+        <h2 id="retrieval-title">Retrieve the reversal</h2>
+        <p>What happens under either classical assignment?</p>
+        <p class="choice-list">
+          <button type="button" aria-pressed="false" data-response="Exactly. TRUE activates what the sentence says and yields FALSE; FALSE makes its claim correct and yields TRUE.">The assigned value forces its opposite.</button>
+          <button type="button" aria-pressed="false" data-response="No. Neither value is a fixed point: evaluating the sentence always sends you across to the other side.">The assigned value confirms its origin.</button>
+        </p>
+        <p class="answer" data-teach-feedback hidden aria-live="polite"></p>
+      </section>
+
+      <h2>Three paradox engines</h2>
+      <div class="question">
+        <h3>Ship of Theseus</h3>
+        <p>Two identity criteria point to different successors.</p>
+      </div>
+      <div class="question">
+        <h3>Sorites</h3>
+        <p>One tolerant local inference destroys the distinction between clear endpoints when repeated.</p>
+      </div>
+      <div class="question">
+        <h3>Liar</h3>
+        <p>A self-referential truth claim sends either attempted classical value to its opposite.</p>
+      </div>
+
+      <h2>Keep</h2>
+      <p>The Liar is not merely “a confusing sentence.” Its sharp structure is a failed fixed point: ordinary evaluation maps TRUE to FALSE and FALSE to TRUE, leaving no stable classical assignment.</p>
+      <p class="source">A <a href="../reference/liar-structure.html">printable Liar structure card</a> preserves the two-direction derivation.</p>
+
+      <h2>Primary source</h2>
+      <p>Read the <a href="https://plato.stanford.edu/entries/liar-paradox/">Stanford Encyclopedia of Philosophy's “Liar Paradox”</a> for the simple Liar, related cycles, and the major response families. The puzzle is traditionally associated with Eubulides; the <a href="https://doi.org/10.1093/acrefore/9780199381135.013.2518">Oxford Classical Dictionary</a> gives the historical attribution.</p>
+
+      <p><strong>Ask your agent a follow-up question</strong> if you want to test a proposed escape—truth-value gaps, truth-value gluts, or language hierarchies—without turning this lesson into a full survey.</p>
+
+      <nav class="lesson-nav" aria-label="Course navigation">
+        <a href="0002-sorites.html">← Lesson 2: Sorites</a>
+        <a href="../index.html">Course home</a>
+      </nav>
+    </article>
+  </main>
+  <noscript><p>Both rendered ManimGL explanations remain available. JavaScript is only needed for feedback and live enhancement.</p></noscript>
+  <script src="../assets/teach-choice.js"></script>
+  <script src="../assets/lumanim-live.js"></script>
+</body>
+</html>
