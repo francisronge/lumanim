@@ -15,7 +15,12 @@ runtime = load_script("lumanim_runtime")
 
 class FakeRenderer:
     def status(self):
-        return {"ok": True, "engine": "3b1b/manim", "lesson_id": "test"}
+        return {
+            "ok": True,
+            "engine": "3b1b/manim",
+            "lesson_id": "test",
+            "visual_id": "first-visual",
+        }
 
 
 class RuntimeHTTPTests(unittest.TestCase):
@@ -43,6 +48,7 @@ class RuntimeHTTPTests(unittest.TestCase):
             body = json.load(response)
         self.assertTrue(body["ok"])
         self.assertEqual(body["engine"], "3b1b/manim")
+        self.assertEqual(body["visual_id"], "first-visual")
 
     def test_foreign_origin_is_rejected(self):
         request = Request(f"{self.base}/api/status", headers={"Origin": "https://evil.example"})

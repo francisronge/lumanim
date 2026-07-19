@@ -17,6 +17,7 @@ from urllib.parse import urlsplit
 
 PINNED_COMMIT = "6199a00d4c1b1127ebe45cb629c3f22538b10e13"
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 
 
 class LessonHTML(HTMLParser):
@@ -26,12 +27,15 @@ class LessonHTML(HTMLParser):
         self.stylesheets: list[str] = []
         self.scripts: list[str] = []
         self.ids: set[str] = set()
+        self.experience_ids: set[str] = set()
         self.video_controls = False
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = {name: value or "" for name, value in attrs}
         if values.get("id"):
             self.ids.add(values["id"])
+        if values.get("data-lumanim-experience"):
+            self.experience_ids.add(values["data-lumanim-experience"])
         for attribute in ("href", "src", "poster"):
             if values.get(attribute):
                 self.references.append((tag, attribute, values[attribute]))
@@ -67,8 +71,14 @@ def local_target(workspace: Path, page: Path, value: str) -> tuple[Path | None, 
     return target, None
 
 
-def inspect_html(workspace: Path, lesson: Path, manifest: dict, errors: list[str]) -> None:
-    lesson_id = manifest["lesson_id"]
+def inspect_html(
+    workspace: Path,
+    lesson: Path,
+    lesson_id: str,
+    references: list[str],
+    visuals: list[dict],
+    errors: list[str],
+) -> None:
     html = lesson.read_text(encoding="utf-8")
     parser = LessonHTML()
     try:
@@ -97,18 +107,27 @@ def inspect_html(workspace: Path, lesson: Path, manifest: dict, errors: list[str
         if not target.is_file() or target.stat().st_size == 0:
             errors.append(f"{lesson_id}: broken local reference {value!r}")
 
-    bundle = workspace / "assets" / "manim" / lesson_id
-    expected_media = {bundle / "fallback.mp4", bundle / "poster.png"}
     linked_media = set(resolved.values())
-    for expected in expected_media:
-        if expected not in linked_media:
-            errors.append(f"{lesson_id}: HTML does not link {expected.name}")
+    for visual in visuals:
+        visual_id = visual["visual_id"]
+        visual_bundle = visual["_bundle"]
+        for name in ("fallback.mp4", "poster.png"):
+            expected = visual_bundle / name
+            if expected not in linked_media:
+                errors.append(f"{lesson_id}/{visual_id}: HTML does not link {name}")
 
-    if manifest.get("live", {}).get("enabled"):
+    live_visuals = [visual for visual in visuals if visual.get("live", {}).get("enabled")]
+    if live_visuals:
         if not any(Path(urlsplit(value).path).name == "lumanim-live.js" for value in parser.scripts):
             errors.append(f"{lesson_id}: live lesson does not load lumanim-live.js")
+    for visual in live_visuals:
+        if visual.get("_schema_version") == 2 and visual["visual_id"] not in parser.experience_ids:
+            errors.append(
+                f"{lesson_id}/{visual['visual_id']}: live visual lacks matching "
+                "data-lumanim-experience"
+            )
 
-    for relative in manifest.get("references", []):
+    for relative in references:
         expected = (workspace / relative).resolve()
         if expected not in linked_media:
             errors.append(f"{lesson_id}: HTML does not link declared reference {relative}")
@@ -187,6 +206,175 @@ def inspect_mp4(path: Path, render: dict, lesson_id: str, errors: list[str]) -> 
         errors.append(f"{lesson_id}: fallback.mp4 is not web-optimized with faststart")
 
 
+def normalize_manifest(bundle: Path, manifest: dict, errors: list[str]) -> tuple[str | None, list[str], list[dict]]:
+    lesson_id = manifest.get("lesson_id")
+    if not isinstance(lesson_id, str) or not SLUG.fullmatch(lesson_id):
+        errors.append(f"{lesson_id}: invalid lesson_id")
+        return None, [], []
+    if lesson_id != bundle.name:
+        errors.append(f"{lesson_id}: lesson_id must match bundle directory {bundle.name}")
+
+    references = manifest.get("references", [])
+    if not isinstance(references, list) or not all(isinstance(item, str) for item in references):
+        errors.append(f"{lesson_id}: references must be a list of paths")
+        references = []
+
+    schema_version = manifest.get("schema_version")
+    if schema_version == 1:
+        visual = dict(manifest)
+        visual.update(
+            {
+                "visual_id": lesson_id,
+                "_bundle": bundle,
+                "_schema_version": 1,
+            }
+        )
+        return lesson_id, references, [visual]
+    if schema_version != 2:
+        errors.append(f"{lesson_id}: unsupported or missing schema_version")
+        return lesson_id, references, []
+
+    declared = manifest.get("visuals")
+    if not isinstance(declared, list) or not declared:
+        errors.append(f"{lesson_id}: schema 2 requires at least one visual")
+        return lesson_id, references, []
+
+    visuals: list[dict] = []
+    seen_ids: set[str] = set()
+    seen_bundles: set[Path] = set()
+    bundle_root = bundle.resolve()
+    for index, raw in enumerate(declared):
+        if not isinstance(raw, dict):
+            errors.append(f"{lesson_id}: visuals[{index}] must be an object")
+            continue
+        visual_id = raw.get("visual_id")
+        label = f"{lesson_id}/{visual_id}"
+        if not isinstance(visual_id, str) or not SLUG.fullmatch(visual_id):
+            errors.append(f"{label}: invalid visual_id")
+            continue
+        if visual_id in seen_ids:
+            errors.append(f"{label}: duplicate visual_id")
+            continue
+        seen_ids.add(visual_id)
+
+        relative = raw.get("bundle")
+        if not isinstance(relative, str) or not relative or Path(relative).is_absolute():
+            errors.append(f"{label}: bundle must be a relative path")
+            continue
+        visual_bundle = (bundle / relative).resolve()
+        try:
+            visual_bundle.relative_to(bundle_root)
+        except ValueError:
+            errors.append(f"{label}: bundle path escapes the lesson bundle")
+            continue
+        if visual_bundle in seen_bundles:
+            errors.append(f"{label}: duplicate bundle path")
+            continue
+        seen_bundles.add(visual_bundle)
+
+        visual = dict(raw)
+        visual.update(
+            {
+                "visual_id": visual_id,
+                "_bundle": visual_bundle,
+                "_schema_version": 2,
+            }
+        )
+        visuals.append(visual)
+    return lesson_id, references, visuals
+
+
+def inspect_visual(workspace: Path, lesson_id: str, visual: dict, errors: list[str]) -> None:
+    visual_id = visual["visual_id"]
+    label = lesson_id if visual.get("_schema_version") == 1 else f"{lesson_id}/{visual_id}"
+    bundle = visual["_bundle"]
+    scene = bundle / "scene.py"
+    poster = bundle / "poster.png"
+    fallback = bundle / "fallback.mp4"
+    missing = False
+    for path in (scene, poster, fallback):
+        if not path.is_file() or path.stat().st_size == 0:
+            try:
+                relative = path.relative_to(workspace)
+            except ValueError:
+                relative = path
+            errors.append(f"{label}: missing or empty {relative}")
+            missing = True
+    if missing:
+        return
+
+    source = scene.read_text(encoding="utf-8")
+    if not re.search(r"^from manimlib import \*", source, re.MULTILINE):
+        errors.append(f"{label}: scene.py does not import the canonical manimlib")
+    if not isinstance(visual.get("scene_class"), str) or not visual.get("scene_class"):
+        errors.append(f"{label}: scene_class is missing")
+
+    live = visual.get("live")
+    if not isinstance(live, dict):
+        errors.append(f"{label}: live must be an object")
+        live = {}
+    if live.get("enabled") and not visual.get("live_scene_class"):
+        errors.append(f"{label}: live_scene_class is missing")
+
+    inspection = visual.get("inspection")
+    if not isinstance(inspection, dict):
+        errors.append(f"{label}: inspection must be an object")
+        inspection = {}
+    if inspection.get("reviewed") is not True:
+        errors.append(f"{label}: inspection.reviewed must be true")
+    frames = inspection.get("frames", [])
+    if not isinstance(frames, list) or not frames:
+        errors.append(f"{label}: no inspection frames recorded")
+        frames = []
+    for relative in frames:
+        if not isinstance(relative, str) or not relative or Path(relative).is_absolute():
+            errors.append(f"{label}: missing inspection frame {relative}")
+            continue
+        frame = (bundle / relative).resolve()
+        try:
+            frame.relative_to(bundle.resolve())
+        except ValueError:
+            errors.append(f"{label}: inspection frame escapes the visual bundle: {relative}")
+            continue
+        if not frame.is_file() or frame.stat().st_size == 0:
+            errors.append(f"{label}: missing inspection frame {relative}")
+
+    render = visual.get("render", {})
+    required_render = (
+        "command",
+        "resolution",
+        "fps",
+        "seed",
+        "scene_sha256",
+        "fallback_sha256",
+        "poster_sha256",
+    )
+    render_valid = isinstance(render, dict)
+    if not render_valid:
+        errors.append(f"{label}: render must be an object")
+        render = {}
+    for field in required_render:
+        if field not in render:
+            errors.append(f"{label}: render.{field} is missing")
+            render_valid = False
+    resolution = render.get("resolution")
+    if not isinstance(resolution, list) or len(resolution) != 2 or not all(
+        isinstance(number, int) and number > 0 for number in resolution
+    ):
+        errors.append(f"{label}: render.resolution must contain two positive integers")
+        render_valid = False
+    if not render_valid:
+        return
+
+    for name, path in (("scene", scene), ("fallback", fallback), ("poster", poster)):
+        actual = sha256(path)
+        if render[f"{name}_sha256"] != actual:
+            errors.append(f"{label}: render.{name}_sha256 does not match {path.name}")
+
+    inspect_png(poster, resolution, label, errors)
+    inspect_mp4(fallback, render, label, errors)
+
+
 def check_bundle(workspace: Path, manifest_path: Path) -> list[str]:
     errors: list[str] = []
     bundle = manifest_path.parent
@@ -195,28 +383,9 @@ def check_bundle(workspace: Path, manifest_path: Path) -> list[str]:
     except (OSError, json.JSONDecodeError) as error:
         return [f"{manifest_path}: invalid JSON: {error}"]
 
-    lesson_id = manifest.get("lesson_id", bundle.name)
-    if manifest.get("schema_version") != 1:
-        errors.append(f"{lesson_id}: unsupported or missing schema_version")
-    if lesson_id != bundle.name:
-        errors.append(f"{lesson_id}: lesson_id must match bundle directory {bundle.name}")
-    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", str(lesson_id)):
-        errors.append(f"{lesson_id}: invalid lesson_id")
-
-    lesson = workspace / "lessons" / f"{lesson_id}.html"
-    scene = bundle / "scene.py"
-    poster = bundle / "poster.png"
-    fallback = bundle / "fallback.mp4"
-    required = [scene, poster, fallback, lesson]
-    for path in required:
-        if not path.is_file() or path.stat().st_size == 0:
-            errors.append(f"{lesson_id}: missing or empty {path.relative_to(workspace)}")
-    if errors:
+    lesson_id, references, visuals = normalize_manifest(bundle, manifest, errors)
+    if lesson_id is None:
         return errors
-
-    source = scene.read_text(encoding="utf-8")
-    if not re.search(r"^from manimlib import \*", source, re.MULTILINE):
-        errors.append(f"{lesson_id}: scene.py does not import the canonical manimlib")
 
     manimgl = manifest.get("manimgl", {})
     if manimgl.get("repository") != "https://github.com/3b1b/manim":
@@ -224,35 +393,13 @@ def check_bundle(workspace: Path, manifest_path: Path) -> list[str]:
     if manimgl.get("commit") != PINNED_COMMIT:
         errors.append(f"{lesson_id}: ManimGL commit must be {PINNED_COMMIT}")
 
-    inspection = manifest.get("inspection", {})
-    if inspection.get("reviewed") is not True:
-        errors.append(f"{lesson_id}: inspection.reviewed must be true")
-    frames = inspection.get("frames", [])
-    if not frames:
-        errors.append(f"{lesson_id}: no inspection frames recorded")
-    for relative in frames:
-        frame = bundle / relative
-        if not frame.is_file() or frame.stat().st_size == 0:
-            errors.append(f"{lesson_id}: missing inspection frame {relative}")
-
-    render = manifest.get("render", {})
-    for field in ("command", "resolution", "fps", "seed", "scene_sha256", "fallback_sha256", "poster_sha256"):
-        if field not in render:
-            errors.append(f"{lesson_id}: render.{field} is missing")
-    resolution = render.get("resolution")
-    if not isinstance(resolution, list) or len(resolution) != 2 or not all(isinstance(n, int) and n > 0 for n in resolution):
-        errors.append(f"{lesson_id}: render.resolution must contain two positive integers")
-    if errors:
-        return errors
-
-    for name, path in (("scene", scene), ("fallback", fallback), ("poster", poster)):
-        actual = sha256(path)
-        if render[f"{name}_sha256"] != actual:
-            errors.append(f"{lesson_id}: render.{name}_sha256 does not match {path.name}")
-
-    inspect_html(workspace, lesson, manifest, errors)
-    inspect_png(poster, resolution, lesson_id, errors)
-    inspect_mp4(fallback, render, lesson_id, errors)
+    lesson = workspace / "lessons" / f"{lesson_id}.html"
+    if not lesson.is_file() or lesson.stat().st_size == 0:
+        errors.append(f"{lesson_id}: missing or empty lessons/{lesson_id}.html")
+    for visual in visuals:
+        inspect_visual(workspace, lesson_id, visual, errors)
+    if lesson.is_file() and visuals:
+        inspect_html(workspace, lesson, lesson_id, references, visuals, errors)
     return errors
 
 
@@ -274,8 +421,18 @@ def main() -> int:
         for error in errors:
             print("FAIL:", error)
         return 1
-    count = len(list((workspace / "assets" / "manim").glob("*/manifest.json")))
-    print(f"PASS: verified {count} Lumanim lesson bundle(s)")
+    manifests = list((workspace / "assets" / "manim").glob("*/manifest.json"))
+    visual_count = 0
+    for manifest_path in manifests:
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        visual_count += len(manifest.get("visuals", [])) if manifest.get("schema_version") == 2 else 1
+    print(
+        f"PASS: verified {len(manifests)} Lumanim lesson bundle(s), "
+        f"{visual_count} visual bundle(s)"
+    )
     return 0
 
 

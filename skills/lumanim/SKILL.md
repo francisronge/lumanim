@@ -25,11 +25,11 @@ Apply `/teach` to inspect or establish `MISSION.md`, `RESOURCES.md`, `learning-r
 
 ### 2. Design the understanding, not decoration
 
-Write a one-sentence learning objective and a compact visual storyboard. State what changes over time or under learner control and why ManimGL makes that relationship easier to understand.
+Write a one-sentence learning objective and a compact visual storyboard. Use as many ManimGL visual beats as the understanding requires; state what each reveals over time or under learner control and why ManimGL makes that relationship easier to understand.
 
-Reject the storyboard if removing the Manim scene would leave the explanation equally strong. Read [MANIMGL-CONTRACT.md](./references/MANIMGL-CONTRACT.md) before authoring any scene.
+Reject any proposed ManimGL visual whose removal would leave the explanation equally strong. Read [MANIMGL-CONTRACT.md](./references/MANIMGL-CONTRACT.md) before authoring any scene.
 
-**Complete when:** the scene carries explanatory work that prose or a static ornament does not.
+**Complete when:** every proposed visual carries explanatory work and all visuals serve one coherent learning objective.
 
 ### 3. Ground the lesson
 
@@ -37,15 +37,15 @@ Research high-trust sources as required by `/teach`; update `RESOURCES.md`; cite
 
 **Complete when:** the lesson's factual claims trace to trusted sources and it recommends a primary source.
 
-### 4. Author the real ManimGL scene
+### 4. Author the real ManimGL scenes
 
-Create the bundle described in [LESSON-BUNDLE.md](./references/LESSON-BUNDLE.md). The canonical source must import `manimlib` from 3b1b/manim. Preserve editable `scene.py`, engine commit, render settings, seed, fonts, assets, and synchronization metadata.
+Create the bundle described in [LESSON-BUNDLE.md](./references/LESSON-BUNDLE.md). A lesson may contain one or more independently reproducible visual bundles. Every canonical source must import `manimlib` from 3b1b/manim. Preserve each editable `scene.py`, engine commit, render settings, seed, fonts, assets, and synchronization metadata.
 
 Use live interaction only when it improves learning. If used, implement the live adapter in [RUNTIME.md](./references/RUNTIME.md). Do not call pre-rendered branching or slow rerendering “live.”
 
 The live scene must preserve the visual thesis and decisive annotations of the rendered explanation. Controls should respond continuously unless the concept itself is discrete.
 
-**Complete when:** the preserved source can reproduce the fallback with the pinned real ManimGL engine.
+**Complete when:** every preserved source can reproduce its fallback with the pinned real ManimGL engine.
 
 ### 5. Render, inspect, and revise
 
@@ -55,7 +55,7 @@ Render a draft. Inspect representative frames from the actual output—not merel
 
 ### 6. Build the lesson HTML
 
-Produce the `/teach` lesson as one coherent HTML experience. Embed the exact ManimGL video or image as the unconditional fallback. For live-capable lessons, default to **explanation then exploration**: play the authored video first, then offer an explicit transition into a manipulable version of the same idea. Let the learner return to the video.
+Produce the `/teach` lesson as one coherent HTML experience. Place each ManimGL explanation where it best advances the learning sequence and embed every exact video or image as an unconditional fallback. For live-capable visuals, default to **explanation then exploration**: play the authored video first, then offer an explicit transition into a manipulable version of the same idea. Let the learner return to the video.
 
 Live mode is a progressive enhancement. If it disconnects, restore the video and offer reconnection. Keep the lesson's essential explanation in the page itself so runtime loss cannot strand the learner behind a broken navigation. Do not narrate runtime mechanics or expose persistent mode/status pills in the learner interface; the video, exploration controls, and recovery action should communicate the available state.
 
@@ -76,10 +76,10 @@ Only update learning records or the glossary when the learner has demonstrated t
 ## Hard gates
 
 - **Real engine:** Use 3b1b/manim ManimGL. No reimplementation, imitation, SVG substitute, CSS recreation, or “Manim-inspired” renderer may satisfy the Manim requirement.
-- **Meaningful scene:** Every Lumanim lesson contains a real ManimGL explanation. If its removal does not weaken the lesson, redesign it.
+- **Meaningful visuals:** Every Lumanim lesson contains one or more real ManimGL explanations. Each visual must weaken the lesson if removed; bundle count follows pedagogy, not a quota.
 - **Sole surface:** The learner uses HTML. A native ManimGL window is never the lesson UI.
-- **Exact fallback:** Every lesson embeds rendered ManimGL media and remains usable without Python, a server, or network access.
-- **Editable source:** Preserve the scene and reproducibility inputs. Imported scene code is untrusted and must never execute without explicit learner consent.
+- **Exact fallbacks:** Every visual bundle embeds rendered ManimGL media and the lesson remains usable without Python, a server, or network access.
+- **Editable sources:** Preserve every scene and its reproducibility inputs. Imported scene code is untrusted and must never execute without explicit learner consent.
 - **Optional live mode:** Add it when pedagogically valuable, not by quota. “Live” means a continuously responsive control loop.
 - **Explanation then exploration:** A live lab deepens the authored ManimGL explanation; it does not replace or hide it on page load.
 - **Honest portability:** Label only verified platforms as verified. Degrade to the rendered fallback everywhere else.

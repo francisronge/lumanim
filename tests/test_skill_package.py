@@ -30,6 +30,12 @@ class SkillPackageTests(unittest.TestCase):
         provenance = (SKILL / "references" / "PROVENANCE.md").read_text(encoding="utf-8")
         self.assertIn(actual, provenance)
 
+    def test_live_client_scopes_multiple_visual_experiences(self):
+        client = (SKILL / "assets" / "lumanim-live.js").read_text(encoding="utf-8")
+        self.assertIn("querySelectorAll", client)
+        self.assertIn("data-lumanim-experience", client)
+        self.assertIn("status.visual_id !== visualId", client)
+
     def test_no_personal_paths_or_common_secret_markers(self):
         markers = (
             "/" + "Users" + "/",

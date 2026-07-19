@@ -2,7 +2,7 @@
 
 Lumanim is an Agent Skill that keeps Matt Pocock's complete `/teach` method and adds real [3b1b ManimGL](https://github.com/3b1b/manim) visual explanations.
 
-The learner receives one HTML lesson. It opens with an authored ManimGL video or image, remains useful offline, and can optionally transition into a live exploration backed by the same real ManimGL scene.
+The learner receives one HTML lesson containing as many authored ManimGL explanations as the learning objective requires. Each remains useful offline and can optionally transition into live exploration backed by the same real ManimGL scene.
 
 ## What Lumanim preserves
 
@@ -44,8 +44,11 @@ Run a trusted live-capable lesson with:
 <runtime-python> skills/lumanim/scripts/lumanim_runtime.py \
   --workspace <teaching-workspace> \
   --lesson <lesson-id> \
+  --visual <visual-id> \
   --trust-scene
 ```
+
+`--visual` is optional when the lesson has only one live-capable ManimGL bundle.
 
 `scene.py` is executable Python. Read [SECURITY.md](SECURITY.md) before running a scene obtained from someone else.
 

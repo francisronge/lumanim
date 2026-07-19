@@ -12,8 +12,11 @@ Start one explicitly trusted lesson with the runtime Python:
 <runtime>/.venv/bin/python <lumanim-skill>/scripts/lumanim_runtime.py \
   --workspace <teaching-workspace> \
   --lesson <lesson-id> \
+  --visual <visual-id> \
   --trust-scene
 ```
+
+Omit `--visual` when the lesson has exactly one live-capable visual. When several visuals offer live exploration, choose one explicitly. The companion keeps that selected visual resident; every other visual remains available through its exact rendered fallback in the same HTML lesson.
 
 On Windows, use `<runtime>\.venv\Scripts\python.exe`. The server prints the learner URL after ManimGL initializes.
 
@@ -29,11 +32,11 @@ Failure is non-fatal for the lesson because rendered media is mandatory.
 
 ## Trust boundary
 
-`scene.py` is executable Python. The companion must not discover and run arbitrary lesson scenes automatically. The learner chooses a workspace and explicitly trusts the scene bundle before first execution. Bind only to loopback; reject path traversal and cross-origin requests; never expose the runtime to the LAN by default.
+`scene.py` is executable Python. The companion must not discover and run arbitrary lesson scenes automatically. The learner chooses a workspace, lesson, and visual and explicitly trusts that scene bundle before first execution. Bind only to loopback; reject path traversal and cross-origin requests; never expose the runtime to the LAN by default.
 
 ## Live scene adapter
 
-A live-capable `scene.py` exports a class named by `manifest.json`. It must provide:
+A live-capable visual's `scene.py` exports the class named by its manifest entry. It must provide:
 
 ```python
 class ShipOfTheseusLive(Scene):

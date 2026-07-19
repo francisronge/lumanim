@@ -14,7 +14,7 @@ Manim Community Edition is not the canonical engine. A browser drawing API, an S
 
 ## Scene requirements
 
-Each lesson bundle must contain a readable `scene.py` whose explanatory visual is composed and rendered by real ManimGL mobjects, animations, cameras, shaders, or update mechanisms.
+Each visual bundle must contain a readable `scene.py` whose explanation is composed and rendered by real ManimGL mobjects, animations, cameras, shaders, or update mechanisms. A lesson may sequence multiple visual bundles when that improves learning.
 
 Require all of the following:
 
@@ -22,7 +22,7 @@ Require all of the following:
 2. Explicit typography: record the font family and bundle redistributable fonts when exact reproduction requires them.
 3. Reproducible media: record resolution, frame rate, transparency, quality flags, engine commit, and render command.
 4. Portable asset paths: resolve files relative to the bundle, never an author's home directory.
-5. One visual thesis: every movement or transformation should serve the learning objective.
+5. One visual thesis per lesson: every bundle, movement, and transformation should serve the shared learning objective. This is a coherence rule, not a one-video limit.
 
 Avoid TeX when ordinary ManimGL `Text` is sufficient. TeX remains available when notation requires it, but the runtime preflight must then verify a LaTeX installation.
 
