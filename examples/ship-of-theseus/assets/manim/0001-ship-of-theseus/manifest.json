@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "lesson_id": "0001-ship-of-theseus",
+  "references": ["reference/identity-claims.html"],
+  "scene_class": "ShipOfTheseusLesson",
+  "live_scene_class": "ShipOfTheseusLive",
+  "manimgl": {
+    "repository": "https://github.com/3b1b/manim",
+    "commit": "6199a00d4c1b1127ebe45cb629c3f22538b10e13"
+  },
+  "render": {
+    "command": "manimgl scene.py ShipOfTheseusLesson -w -r 1280x720 --fps 30 --video_dir . --file_name fallback",
+    "postprocess_command": "ffmpeg -i fallback.mp4 -map 0:v:0 -c copy -movflags +faststart fallback.faststart.mp4",
+    "resolution": [1280, 720],
+    "fps": 30,
+    "seed": 0,
+    "font": "Avenir Next",
+    "scene_sha256": "ce0635a0ca075156091c4388402fce57a0e8f8b6a6d687e2b207053c37cbb506",
+    "fallback_sha256": "3851674f0eb33751d5e1d10b427b2be256584e87091569f90c4289d5174e26da",
+    "poster_sha256": "25f73f325311c6a04bc963093a7db7c080809a62d801f93b55060ef4c1e1cce1",
+    "decoded_frame_sha256": "783de2514ab3d6e057cd3ebc48ee8ab79c0516fa1bf412dddde0a1dcd997e212"
+  },
+  "live": {
+    "enabled": true,
+    "parameter": "replacement_fraction",
+    "range": [0, 1],
+    "resolution": [960, 540],
+    "fps": 30
+  },
+  "inspection": {
+    "frames": [
+      "inspection/frame-001.png",
+      "inspection/frame-002.png",
+      "inspection/frame-003.png",
+      "inspection/frame-004.png",
+      "inspection/contact-sheet.png",
+      "inspection/live-frame.jpg",
+      "inspection/live-continuous-004.jpg",
+      "inspection/live-endpoint.jpg"
+    ],
+    "reviewed": true,
+    "notes": "Reviewed the authored video sequence, continuous 4% live replacement, 50% live state, and final two-claimant labels. Browser-tested video-first entry, explicit exploration, continuous control, replay, runtime-loss fallback, visible reconnect, successful reconnection, and the in-page identity-claims anchor. Confirmed the learner interface contains no runtime-mechanics paragraph or visible mode/status pills in either video or live state. Removed query strings from local asset paths for direct file loading, hide live-only controls in direct-file mode, and losslessly remuxed the exact H.264 fallback with MP4 metadata first; decoded frame hashes match before and after. The example's stylesheet is workspace-specific and is not distributed as Lumanim's design. Concurrent lesson, reference, and live-frame requests returned HTTP 200; warm live frames completed in roughly 4–7 ms."
+  }
+}

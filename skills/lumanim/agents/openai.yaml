@@ -1,0 +1,6 @@
+interface:
+  display_name: "Lumanim"
+  short_description: "Learn through real ManimGL visual lessons"
+  default_prompt: "Use $lumanim to teach me a concept through a real ManimGL visual lesson."
+policy:
+  allow_implicit_invocation: false
