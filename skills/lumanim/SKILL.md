@@ -63,11 +63,13 @@ Visual design is a per-workspace creative judgment. Apply `/teach`'s beauty, rea
 
 Include the `/teach` feedback loop, citations, related links, primary source, and invitation to ask the agent follow-up questions. Keep native ManimGL windows for authoring/debugging only.
 
-**Complete when:** the HTML works offline without Python and live mode, if offered, never blocks the lesson.
+After authoring, run `scripts/package_lesson.py <teaching-workspace>`. It preserves the editable lesson as `<lesson-id>.source.html` and produces the learner-facing `<lesson-id>.html` as a standalone file containing the workspace's exact CSS, behavior scripts, posters, and rendered ManimGL media. Do not hand off the source HTML as the learner deliverable.
+
+**Complete when:** the packaged HTML works offline without Python or sibling-file permissions and live mode, if offered, never blocks the lesson.
 
 ### 7. Verify and hand off
 
-Run `scripts/verify_lesson.py` on the teaching workspace. Open the lesson and test the fallback. If live mode exists, test video → exploration → continuous manipulation → replay; stop the runtime and verify automatic recovery; restart it and verify reconnection.
+Run `scripts/package_lesson.py` and then `scripts/verify_lesson.py` on the teaching workspace. Open the packaged lesson directly from disk and test the fallback in a normal browser without permissive file-access flags. If live mode exists, also test video → exploration → continuous manipulation → replay through the companion; stop the runtime and verify automatic recovery; restart it and verify reconnection.
 
 Only update learning records or the glossary when the learner has demonstrated the understanding, as required by `/teach`.
 

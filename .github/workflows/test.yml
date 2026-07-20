@@ -34,4 +34,6 @@ jobs:
         with:
           python-version: "3.13"
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: python skills/lumanim/scripts/package_lesson.py examples/paradoxes
+      - run: git diff --exit-code -- examples/paradoxes/index.html examples/paradoxes/index.source.html examples/paradoxes/lessons
       - run: python skills/lumanim/scripts/verify_lesson.py examples/paradoxes

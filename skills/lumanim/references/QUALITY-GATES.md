@@ -23,7 +23,8 @@ All required checks must pass before presenting a lesson.
 - The visual design is traceable to this mission, subject, learner, and teaching workspace.
 - Existing components from the teaching workspace are reused for within-course consistency as required by `/teach`.
 - The HTML opens directly from disk.
-- Poster and exact rendered media use relative paths and load successfully.
+- The learner-facing HTML is a standalone package generated from a preserved `.source.html` authoring page.
+- Poster and exact rendered media either use working relative paths or are embedded byte-for-byte in a marked standalone copy.
 - Local stylesheet, script, poster, and media references omit URL query strings so `file:` loading resolves real filesystem paths.
 - Direct-file mode hides unavailable live controls instead of presenting an inert or unexplained action.
 - Teaching content and feedback remain available without the companion runtime.

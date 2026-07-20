@@ -28,6 +28,8 @@ assets/
 
 Add local fonts, images, audio, and data beside the `scene.py` that uses them. All HTML paths must be relative so the workspace can be moved or emailed intact. Do not append cache-busting query strings to local asset paths: direct `file:` loading must resolve actual filesystem names.
 
+Always run `scripts/package_lesson.py <teaching-workspace>` before handoff. It preserves the authored page as `<lesson-id>.source.html`, then embeds that source's exact workspace CSS, JavaScript, posters, and rendered MP4s into the learner-facing `<lesson-id>.html`. The generated page is marked with `<meta name="lumanim-packaging" content="standalone">`. The verifier accepts embedded media only when its decoded bytes exactly match the preserved `poster.png` and `fallback.mp4`; standalone packaging is not permission to substitute or recompress the ManimGL render.
+
 ## Manifest
 
 `manifest.json` is machine-readable evidence, not marketing. Include:
@@ -101,7 +103,7 @@ Schema 1 single-visual bundles remain valid for portability. New lessons should 
 
 The HTML file is the sole learner-facing surface and must:
 
-- link the teaching workspace's own shared stylesheet as required by `/teach`;
+- use the teaching workspace's own shared stylesheet as required by `/teach`, either linked by the authored source or embedded unchanged in a generated standalone copy;
 - display every visual's `poster.png`, then offer its authored `fallback.mp4` explanation first;
 - encode the fallback with a browser-supported MP4 profile and place its metadata before media data (`faststart`);
 - transition any live-capable visual into exploration only after an explicit learner action;
