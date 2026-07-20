@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import json
 import shutil
 import tempfile
@@ -9,6 +10,7 @@ from pathlib import Path
 
 from _load import EXAMPLE, load_script
 
+package = load_script("package_lesson")
 verify = load_script("verify_lesson")
 
 
@@ -16,6 +18,10 @@ class VerifyLessonTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.workspace = shutil.copytree(EXAMPLE, Path(self.temp.name) / "lesson")
+        for source in (self.workspace / "lessons").glob("*.source.html"):
+            output = source.with_name(source.name.replace(".source.html", ".html"))
+            shutil.copy2(source, output)
+            source.unlink()
 
     def tearDown(self):
         self.temp.cleanup()
@@ -23,6 +29,11 @@ class VerifyLessonTests(unittest.TestCase):
     def verify_without_ffprobe(self):
         with mock.patch.object(verify, "inspect_mp4"):
             return verify.verify_workspace(self.workspace)
+
+    def package_other_lessons(self, lesson_id):
+        for candidate in package.lesson_ids(self.workspace, []):
+            if candidate != lesson_id:
+                package.package_lesson(self.workspace, candidate)
 
     def make_two_visual_lesson(self):
         lesson_id = "0001-ship-of-theseus"
@@ -73,11 +84,57 @@ class VerifyLessonTests(unittest.TestCase):
         return root, lesson
 
     def test_valid_example_passes_structural_checks(self):
+        for lesson_id in package.lesson_ids(self.workspace, []):
+            package.package_lesson(self.workspace, lesson_id)
         self.assertEqual(self.verify_without_ffprobe(), [])
 
     def test_valid_two_visual_lesson_passes_structural_checks(self):
-        self.make_two_visual_lesson()
+        _, lesson = self.make_two_visual_lesson()
+        package.package_lesson(self.workspace, lesson.stem)
+        self.package_other_lessons(lesson.stem)
         self.assertEqual(self.verify_without_ffprobe(), [])
+
+    def test_unpacked_lesson_fails_with_packaging_instruction(self):
+        errors = self.verify_without_ffprobe()
+        self.assertTrue(any("run package_lesson.py" in error for error in errors))
+
+    def test_exact_standalone_media_passes_structural_checks(self):
+        root, lesson = self.make_two_visual_lesson()
+        html = lesson.read_text(encoding="utf-8")
+        css_path = self.workspace / "assets" / "paradoxes.css"
+        html = html.replace(
+            '<link rel="stylesheet" href="../assets/paradoxes.css">',
+            '<meta name="lumanim-packaging" content="standalone">'
+            f'<style>{css_path.read_text(encoding="utf-8")}</style>',
+        )
+        for visual_id in ("gradual-replacement", "rival-reassembly"):
+            visual = root / "visuals" / visual_id
+            poster = base64.b64encode((visual / "poster.png").read_bytes()).decode("ascii")
+            fallback = base64.b64encode((visual / "fallback.mp4").read_bytes()).decode("ascii")
+            relative = f"../assets/manim/0001-ship-of-theseus/visuals/{visual_id}"
+            html = html.replace(f"{relative}/poster.png", f"data:image/png;base64,{poster}")
+            html = html.replace(f"{relative}/fallback.mp4", f"data:video/mp4;base64,{fallback}")
+        lesson.write_text(html, encoding="utf-8")
+        self.package_other_lessons("0001-ship-of-theseus")
+        self.assertEqual(self.verify_without_ffprobe(), [])
+
+    def test_standalone_media_must_match_preserved_fallback(self):
+        root, lesson = self.make_two_visual_lesson()
+        html = lesson.read_text(encoding="utf-8")
+        css_path = self.workspace / "assets" / "paradoxes.css"
+        html = html.replace(
+            '<link rel="stylesheet" href="../assets/paradoxes.css">',
+            '<meta name="lumanim-packaging" content="standalone">'
+            f'<style>{css_path.read_text(encoding="utf-8")}</style>',
+        )
+        visual_id = "gradual-replacement"
+        relative = f"../assets/manim/0001-ship-of-theseus/visuals/{visual_id}"
+        html = html.replace(f"{relative}/poster.png", "data:image/png;base64,YmFk")
+        html = html.replace(f"{relative}/fallback.mp4", "data:video/mp4;base64,YmFk")
+        lesson.write_text(html, encoding="utf-8")
+        errors = self.verify_without_ffprobe()
+        self.assertTrue(any(f"{visual_id}: HTML does not link fallback.mp4" in error for error in errors))
+        self.assertTrue(any(f"{visual_id}: HTML does not link poster.png" in error for error in errors))
 
     def test_each_visual_fallback_must_be_linked(self):
         _, lesson = self.make_two_visual_lesson()

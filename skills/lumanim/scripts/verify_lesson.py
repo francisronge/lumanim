@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import base64
+import binascii
 from fractions import Fraction
 import hashlib
 from html.parser import HTMLParser
@@ -29,6 +31,9 @@ class LessonHTML(HTMLParser):
         self.ids: set[str] = set()
         self.experience_ids: set[str] = set()
         self.video_controls = False
+        self.packaging = ""
+        self.inline_styles: list[str] = []
+        self._style_parts: list[str] | None = None
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = {name: value or "" for name, value in attrs}
@@ -36,15 +41,30 @@ class LessonHTML(HTMLParser):
             self.ids.add(values["id"])
         if values.get("data-lumanim-experience"):
             self.experience_ids.add(values["data-lumanim-experience"])
+        if tag == "meta" and values.get("name") == "lumanim-packaging":
+            self.packaging = values.get("content", "")
+        if tag == "style":
+            self._style_parts = []
         for attribute in ("href", "src", "poster"):
             if values.get(attribute):
                 self.references.append((tag, attribute, values[attribute]))
         if tag == "link" and "stylesheet" in values.get("rel", "").split():
             self.stylesheets.append(values.get("href", ""))
-        if tag == "script" and values.get("src"):
-            self.scripts.append(values["src"])
+        if tag == "script":
+            script_source = values.get("src") or values.get("data-lumanim-source")
+            if script_source:
+                self.scripts.append(script_source)
         if tag == "video" and "controls" in values:
             self.video_controls = True
+
+    def handle_data(self, data: str) -> None:
+        if self._style_parts is not None:
+            self._style_parts.append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "style" and self._style_parts is not None:
+            self.inline_styles.append("".join(self._style_parts))
+            self._style_parts = None
 
 
 def sha256(path: Path) -> str:
@@ -87,13 +107,29 @@ def inspect_html(
         errors.append(f"{lesson_id}: HTML could not be parsed: {error}")
         return
 
-    if not parser.stylesheets:
+    standalone = parser.packaging == "standalone"
+    if not standalone:
+        errors.append(
+            f"{lesson_id}: learner-facing HTML is not standalone; run package_lesson.py"
+        )
+    if not parser.stylesheets and not (standalone and parser.inline_styles):
         errors.append(f"{lesson_id}: HTML has no workspace stylesheet")
     if not parser.video_controls:
         errors.append(f"{lesson_id}: fallback video lacks learner controls")
 
     resolved: dict[str, Path] = {}
+    embedded_hashes: set[tuple[str, str]] = set()
     for tag, attribute, value in parser.references:
+        if value.startswith("data:"):
+            header, separator, payload = value.partition(",")
+            if separator and ";base64" in header:
+                media_type = header[5:].split(";", 1)[0].lower()
+                try:
+                    embedded = base64.b64decode(payload, validate=True)
+                except (binascii.Error, ValueError):
+                    errors.append(f"{lesson_id}: {tag}[{attribute}] has invalid base64 data")
+                else:
+                    embedded_hashes.add((media_type, hashlib.sha256(embedded).hexdigest()))
         target, problem = local_target(workspace, lesson, value)
         if problem:
             errors.append(f"{lesson_id}: {tag}[{attribute}] {value!r} {problem}")
@@ -111,9 +147,13 @@ def inspect_html(
     for visual in visuals:
         visual_id = visual["visual_id"]
         visual_bundle = visual["_bundle"]
-        for name in ("fallback.mp4", "poster.png"):
+        for name, media_type in (("fallback.mp4", "video/mp4"), ("poster.png", "image/png")):
             expected = visual_bundle / name
-            if expected not in linked_media:
+            embedded_exactly = expected.is_file() and (
+                media_type,
+                sha256(expected),
+            ) in embedded_hashes
+            if expected not in linked_media and not embedded_exactly:
                 errors.append(f"{lesson_id}/{visual_id}: HTML does not link {name}")
 
     live_visuals = [visual for visual in visuals if visual.get("live", {}).get("enabled")]
@@ -135,17 +175,19 @@ def inspect_html(
     if "ask" not in html.lower() or "agent" not in html.lower():
         errors.append(f"{lesson_id}: HTML lacks the /teach follow-up reminder")
 
+    css_sources = list(parser.inline_styles)
     for stylesheet in parser.stylesheets:
         target = resolved.get(stylesheet)
         if target and target.is_file():
-            css = target.read_text(encoding="utf-8")
-            reduced_motion_hides_video = re.search(
-                r"prefers-reduced-motion[\s\S]{0,500}\bvideo\b[\s\S]{0,200}display\s*:\s*none",
-                css,
-                re.IGNORECASE | re.DOTALL,
-            )
-            if reduced_motion_hides_video:
-                errors.append(f"{lesson_id}: reduced-motion CSS hides the fallback video")
+            css_sources.append(target.read_text(encoding="utf-8"))
+    for css in css_sources:
+        reduced_motion_hides_video = re.search(
+            r"prefers-reduced-motion[\s\S]{0,500}\bvideo\b[\s\S]{0,200}display\s*:\s*none",
+            css,
+            re.IGNORECASE | re.DOTALL,
+        )
+        if reduced_motion_hides_video:
+            errors.append(f"{lesson_id}: reduced-motion CSS hides the fallback video")
 
 
 def inspect_png(path: Path, expected_resolution: list[int], lesson_id: str, errors: list[str]) -> None:

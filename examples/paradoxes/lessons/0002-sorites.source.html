@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A Lumanim lesson on the Sorites paradox and the danger of repeating one apparently harmless step.">
+  <title>One harmless step · Lumanim</title>
+  <link rel="stylesheet" href="../assets/paradoxes.css">
+</head>
+<body>
+  <main>
+    <article>
+      <p class="eyebrow">Lumanim · Paradox 0002</p>
+      <h1>One harmless step.<br>An impossible march.</h1>
+      <p class="lede">The Sorites paradox does not ask you to spot one dramatic mistake. It asks whether the same reasonable judgment can survive being repeated.</p>
+
+      <section class="question" data-teach-choice aria-labelledby="prediction-title">
+        <h2 id="prediction-title">Commit before watching</h2>
+        <p>Suppose 24 grains are clearly a heap. What should happen after exactly one is removed?</p>
+        <p class="choice-list">
+          <button type="button" aria-pressed="false" data-response="That is the tolerance judgment: one tiny difference feels unable to move a vague boundary. Keep it in view; the next visual will repeat it.">A one-grain change preserves the label.</button>
+          <button type="button" aria-pressed="false" data-response="That gives the word a sharp boundary. It is a possible response, but it commits you to some exact grain whose removal changes heap into non-heap.">A one-grain change overturns the label.</button>
+        </p>
+        <p class="answer" data-teach-feedback hidden aria-live="polite"></p>
+      </section>
+    </article>
+
+    <section class="lumanim-stage" data-lumanim-stage data-live="false" aria-label="ManimGL explanation comparing a 24-grain heap with a 23-grain heap">
+      <video controls playsinline preload="metadata" poster="../assets/manim/0002-sorites/visuals/harmless-step/poster.png">
+        <source src="../assets/manim/0002-sorites/visuals/harmless-step/fallback.mp4" type="video/mp4">
+        Your browser cannot play the first rendered ManimGL explanation.
+      </video>
+    </section>
+
+    <article>
+      <h2>The locally harmless step</h2>
+      <p><a href="https://plato.stanford.edu/entries/sorites-paradox/">The Stanford Encyclopedia of Philosophy</a> describes <em>heap</em> as a vague predicate: clear cases exist at both ends, but its boundary is unclear. That makes the one-grain step feel harmless:</p>
+      <p><strong>If <em>n</em> grains are a heap, then <em>n − 1</em> grains are a heap.</strong></p>
+      <p>The visual does not prove that sentence. It isolates the premise your intuition is tempted to grant.</p>
+
+      <h2 class="visual-intro">Now preserve that judgment</h2>
+      <p>Use exactly the same step again, and again, without inventing a special exception halfway through.</p>
+    </article>
+
+    <section data-lumanim-experience="forced-march">
+      <div class="lumanim-stage" data-lumanim-stage data-live="true" data-mode="rendered" aria-label="ManimGL explanation marching the heap judgment from 24 grains to one grain">
+        <video data-lumanim-fallback controls playsinline preload="metadata" poster="../assets/manim/0002-sorites/visuals/forced-march/poster.png">
+          <source src="../assets/manim/0002-sorites/visuals/forced-march/fallback.mp4" type="video/mp4">
+          Your browser cannot play the second rendered ManimGL explanation.
+        </video>
+        <canvas data-lumanim-live-frame hidden role="img" aria-label="A live ManimGL frame showing the heap judgment carried step by step from 24 grains toward one grain."></canvas>
+      </div>
+
+      <div class="lumanim-actions">
+        <button type="button" data-lumanim-explore>March through it yourself</button>
+        <button type="button" class="secondary" data-lumanim-replay hidden>Replay the explanation</button>
+      </div>
+
+      <article>
+        <div class="control-card" data-lumanim-controls hidden>
+          <label for="march"><strong>Carry the same verdict from 24 grains toward one</strong></label>
+          <input id="march" type="range" min="0" max="1" step="0.01" value="0" data-lumanim-control="march_fraction">
+          <button type="button" data-lumanim-reconnect hidden>Reconnect interaction</button>
+        </div>
+      </article>
+    </section>
+
+    <article>
+      <h2>The global collision</h2>
+      <p>The argument combines three commitments:</p>
+      <ol>
+        <li><strong>Clear start:</strong> 24 grains count as a heap in this model.</li>
+        <li><strong>Tolerance:</strong> removing one grain cannot change that verdict.</li>
+        <li><strong>Repetition:</strong> the same inference applies at every adjacent step.</li>
+      </ol>
+      <p>Classical step-by-step reasoning then carries <em>heap</em> all the way to one grain—an unacceptable endpoint. The exact numbers are only a compact visual model; the traditional argument uses enough grains to make the starting case indisputable.</p>
+
+      <section class="question" data-teach-choice aria-labelledby="retrieval-title">
+        <h2 id="retrieval-title">Retrieve the engine</h2>
+        <p>What produces the contradiction?</p>
+        <p class="choice-list">
+          <button type="button" aria-pressed="false" data-response="Exactly. The paradox appears when one tolerance judgment is treated as exceptionless and carried through the entire sequence.">The paradox comes from repeating one step.</button>
+          <button type="button" aria-pressed="false" data-response="Not quite. Removing grains supplies the example, but the logical pressure comes from preserving the same verdict at every adjacent step.">The paradox comes from removing one grain.</button>
+        </p>
+        <p class="answer" data-teach-feedback hidden aria-live="polite"></p>
+      </section>
+
+      <h2>Do not confuse the structures</h2>
+      <div class="question">
+        <h3>Ship of Theseus</h3>
+        <p>Two familiar criteria—continuous history and original material—point to different successors.</p>
+      </div>
+      <div class="question">
+        <h3>Sorites</h3>
+        <p>One locally plausible tolerance rule, repeated without exception, destroys the distinction between clear endpoints.</p>
+      </div>
+
+      <h2>Keep</h2>
+      <p>The Sorites paradox is not merely “we do not know the cutoff.” Its pressure comes from wanting all three things at once: clear endpoint cases, no decisive one-grain change, and unrestricted step-by-step reasoning.</p>
+      <p class="source">A <a href="../reference/sorites-structure.html">printable Sorites structure card</a> compresses the argument for later review.</p>
+
+      <h2>Primary source</h2>
+      <p>Read the <a href="https://plato.stanford.edu/entries/sorites-paradox/">Stanford Encyclopedia of Philosophy's “Sorites Paradox”</a> for the argument's main forms and leading responses. The puzzle is traditionally credited to the fourth-century BCE dialectician Eubulides; see the <a href="https://doi.org/10.1093/acrefore/9780199381135.013.2518">Oxford Classical Dictionary</a> for the historical attribution.</p>
+
+      <p><strong>Ask your agent a follow-up question</strong> if you want to test which commitment you would reject, or apply the same structure to baldness, age, colour, risk, or responsibility.</p>
+
+      <nav class="lesson-nav" aria-label="Course navigation">
+        <a href="0001-ship-of-theseus.html">← Lesson 1: Ship of Theseus</a>
+        <a href="../index.html">Course home</a>
+        <a href="0003-liar.html">Lesson 3: Liar →</a>
+      </nav>
+    </article>
+  </main>
+  <noscript><p>Both rendered ManimGL explanations remain available. JavaScript is only needed for feedback and live enhancement.</p></noscript>
+  <script src="../assets/teach-choice.js"></script>
+  <script src="../assets/lumanim-live.js"></script>
+</body>
+</html>

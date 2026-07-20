@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A Lumanim lesson on the Ship of Theseus and competing criteria of identity.">
+  <title>One past, two claimants · Lumanim</title>
+  <link rel="stylesheet" href="../assets/paradoxes.css">
+</head>
+<body>
+  <main>
+    <article>
+      <p class="eyebrow">Lumanim · Paradox 0001</p>
+      <h1>One past.<br>Two claimants.</h1>
+      <p class="lede">Watch the explanation first. Then take control of the same ManimGL idea and find the point where your own judgment starts to bend.</p>
+
+      <section class="question" data-teach-choice aria-labelledby="prediction-title">
+        <h2 id="prediction-title">Predict before watching</h2>
+        <p>Which fact do you expect to matter more when every plank has been replaced?</p>
+        <p class="choice-list">
+          <button type="button" aria-pressed="false" data-response="You are tracking continuity: one object persists through a connected history of repairs.">History preserves the ship's identity.</button>
+          <button type="button" aria-pressed="false" data-response="You are tracking composition: the original matter is what makes this that particular ship.">Matter preserves the ship's identity.</button>
+        </p>
+        <p class="answer" data-teach-feedback hidden aria-live="polite"></p>
+      </section>
+    </article>
+
+    <section class="lumanim-stage" data-lumanim-stage data-live="true" data-mode="rendered" aria-label="ManimGL explanation of the Ship of Theseus">
+      <video data-lumanim-fallback controls playsinline preload="metadata" poster="../assets/manim/0001-ship-of-theseus/poster.png">
+        <source src="../assets/manim/0001-ship-of-theseus/fallback.mp4" type="video/mp4">
+        Your browser cannot play the rendered ManimGL video.
+      </video>
+      <canvas data-lumanim-live-frame hidden role="img" aria-label="A live ManimGL frame showing replacement planks above and recovered original planks below."></canvas>
+    </section>
+
+    <div class="lumanim-actions">
+      <button type="button" data-lumanim-explore>Now explore it yourself</button>
+      <button type="button" class="secondary" data-lumanim-replay hidden>Replay the explanation</button>
+    </div>
+
+    <article>
+      <div class="control-card" data-lumanim-controls hidden>
+        <label for="replacement"><strong>Replace the planks yourself</strong></label>
+        <p>Replacement: <output data-lumanim-output="replacement_fraction">0%</output></p>
+        <input id="replacement" type="range" min="0" max="1" step="0.01" value="0" data-lumanim-control="replacement_fraction">
+        <button type="button" data-lumanim-reconnect hidden>Reconnect interaction</button>
+      </div>
+
+      <h2>The split</h2>
+      <p>Plutarch reports the simpler dispute: Athenians replaced old timbers over time, and philosophers disagreed about whether the maintained vessel remained the same ship. The later reassembly case sharpens it: the continuous vessel and the vessel rebuilt from the originals now each inherit a different claim to one past.</p>
+      <p>That is not yet a solution. It is the precise conflict:</p>
+      <ul>
+        <li><strong>History</strong> favors the continuously maintained ship.</li>
+        <li><strong>Matter</strong> favors the reassembled original planks.</li>
+        <li><strong>Identity</strong> cannot straightforwardly belong to both if the two later ships are distinct.</li>
+      </ul>
+      <p><a href="#identity-claims">See the two rules side by side on this page</a>.</p>
+
+      <section class="question" data-teach-choice aria-labelledby="retrieval-title">
+        <h2 id="retrieval-title">Retrieve the tension</h2>
+        <p>Without replaying the video: why is the second ship more troublesome than replacing all the planks?</p>
+        <p class="choice-list">
+          <button type="button" aria-pressed="false" data-response="Exactly. Replacement alone invites one yes-or-no judgment. Reassembly creates two rival successors, each supported by a familiar identity rule.">It creates two equally plausible successors.</button>
+          <button type="button" aria-pressed="false" data-response="Not quite. Visual similarity is not the key new fact. The second ship creates a rival claim based on the original material.">It makes both vessels look alike.</button>
+        </p>
+        <p class="answer" data-teach-feedback hidden aria-live="polite"></p>
+      </section>
+
+      <h2 id="identity-claims">The two identity claims</h2>
+      <div class="question">
+        <h3>Continuity</h3>
+        <p><strong>Rule:</strong> the same object persists through one connected history of gradual repairs.</p>
+        <p><strong>Points to:</strong> the continuously maintained ship.</p>
+      </div>
+      <div class="question">
+        <h3>Composition</h3>
+        <p><strong>Rule:</strong> the original matter determines which later object is the original.</p>
+        <p><strong>Points to:</strong> the ship rebuilt from the old planks.</p>
+      </div>
+
+      <h2>Keep</h2>
+      <p>The Ship of Theseus is not just “everything changes.” Its sharp form asks what happens when <em>continuity</em> and <em>original composition</em> point to different objects.</p>
+      <p class="source">Everything needed for this lesson is above. A <a href="../reference/identity-claims.html">printable identity-claims summary</a> is available for later review.</p>
+
+      <h2>Primary source</h2>
+      <p>Read <a href="https://www.perseus.tufts.edu/hopper/text?doc=Perseus%3Atext%3A2008.01.0067%3Achapter%3D23%3Asection%3D1">Plutarch, <em>Life of Theseus</em> 23.1</a> for the ancient replacement passage. For the replacement-and-reassembly problem, continue with the <a href="https://plato.stanford.edu/entries/identity-time/">Stanford Encyclopedia of Philosophy's “Identity Over Time”</a>.</p>
+
+      <p><strong>Ask your agent a follow-up question</strong> if you want to test a proposed solution or apply the same two identity rules to a person, company, body, or software system.</p>
+
+      <nav class="lesson-nav" aria-label="Course navigation">
+        <a href="../index.html">Course home</a>
+        <a href="0002-sorites.html">Lesson 2: Sorites →</a>
+      </nav>
+    </article>
+  </main>
+  <noscript><p>This lesson's rendered ManimGL video remains available. JavaScript is only needed for feedback and live enhancement.</p></noscript>
+  <script src="../assets/teach-choice.js"></script>
+  <script src="../assets/lumanim-live.js"></script>
+</body>
+</html>

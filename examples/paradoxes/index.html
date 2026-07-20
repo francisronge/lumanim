@@ -5,7 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Three Lumanim lessons making distinct philosophical paradox structures visible with real ManimGL.">
   <title>Paradoxes · Lumanim</title>
-  <link rel="stylesheet" href="assets/paradoxes.css">
+  <style data-lumanim-source="assets/paradoxes.css">
+:root {
+  color-scheme: dark;
+  --ink: #f2f2f2;
+  --muted: #aeb5bd;
+  --paper: #000;
+  --card: #090b0e;
+  --line: #292e35;
+  --accent: #58c4dd;
+  --live: #1e7657;
+  font-family: "Avenir Next", Avenir, Inter, system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--paper); color: var(--ink); line-height: 1.55; }
+main { width: min(72rem, calc(100% - 2rem)); margin: 0 auto; padding: 3rem 0 6rem; }
+article { width: min(46rem, 100%); }
+h1 { font-family: Iowan Old Style, Palatino, Georgia, serif; font-size: clamp(2.4rem, 6vw, 5.5rem); line-height: .95; letter-spacing: -.04em; margin: .15em 0 .35em; }
+h2 { margin-top: 2.5rem; }
+p, li { max-width: 68ch; }
+.eyebrow { color: var(--accent); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: .78rem; }
+.lede { color: var(--muted); font-size: 1.2rem; }
+a { color: var(--accent); }
+.lumanim-stage { position: relative; width: min(72rem, 100%); aspect-ratio: 16 / 9; margin: 2.25rem 0 1rem; overflow: hidden; border-radius: 1rem; background: #10151b; box-shadow: 0 1.5rem 4rem rgb(40 30 15 / 18%); }
+.lumanim-stage video, .lumanim-stage img, .lumanim-stage canvas { width: 100%; height: 100%; display: block; object-fit: cover; }
+.lumanim-actions { width: min(72rem, 100%); display: flex; align-items: center; gap: .7rem; margin: .75rem 0 1rem; }
+.lumanim-actions .secondary { color: var(--ink); background: transparent; border: 1px solid var(--line); }
+.lumanim-actions button.is-invited { animation: invite 1.2s ease-in-out 2; }
+.control-card, .question { width: min(46rem, 100%); margin: 1rem 0; padding: 1.2rem 1.35rem; border: 1px solid var(--line); border-radius: .8rem; background: var(--card); }
+.choice-list { display: grid; gap: .65rem; width: fit-content; max-width: 100%; }
+.choice-list button { width: 100%; text-align: left; }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+.control-scale { display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); font-size: .85rem; }
+button { border: 0; border-radius: .55rem; padding: .7rem 1rem; color: #000; background: var(--ink); font: inherit; cursor: pointer; }
+button:disabled, input:disabled { cursor: not-allowed; opacity: .55; }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid #e3a528; outline-offset: 3px; }
+.answer { margin-top: .8rem; padding-left: 1rem; border-left: 3px solid var(--accent); }
+.source { color: var(--muted); font-size: .92rem; }
+.lesson-nav { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+.visual-intro { margin-top: 2.5rem; }
+@media (prefers-reduced-motion: reduce) { .lumanim-actions button.is-invited { animation: none; } }
+@keyframes invite { 50% { transform: translateY(-2px); box-shadow: 0 .5rem 1.5rem rgb(184 61 46 / 25%); } }
+
+</style>
+  <meta name="lumanim-packaging" content="standalone">
 </head>
 <body>
   <main>
